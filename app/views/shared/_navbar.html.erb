@@ -1,5 +1,19 @@
-<nav class="bg-blue-400 text-blue-100 text-xl px-4 py-2">
+<nav class="bg-blue-400 text-blue-100 text-xl px-4 py-2 flex justify-between items-center">
   <a href="/">
     <i class="fab fa-trello"></i> Jello
   </a>
+
+  <div>
+    <ul class="nav-group flex items-center">
+      <% if user_signed_in? %>
+      <li class="mr-4"><span><%= current_user.email %></span></li>
+      <!-- <li><%= link_to '會員中心', edit_user_registration_path %></li> -->
+      <li class="user-button"><%= link_to '登出', destroy_user_session_path, method: 'DELETE' %></li>
+      <% else %>
+      <li class="user-button"><%= link_to '註冊', new_user_session_path %></li>
+      <li class="user-button"><%= link_to '登入', user_session_path %></li>
+      <% end %>
+    </ul>
+  </div>
+
 </nav>
