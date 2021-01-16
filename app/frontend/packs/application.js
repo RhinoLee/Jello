@@ -11,7 +11,9 @@ import 'styles'
 
 
 // Vue.js
-import Vue from 'vue/dist/vue.esm'
+import Vue from 'vue/dist/vue.esm';
+import List from 'components/list';
+
 
 document.addEventListener('turbolinks:load', function(e){
 
@@ -19,6 +21,9 @@ document.addEventListener('turbolinks:load', function(e){
 
   if (el) {
     new Vue({
+      components: {
+        List,
+      },
       el,
       data: {
         lists: JSON.parse(el.dataset.lists)
