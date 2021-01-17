@@ -4,7 +4,9 @@
     <h2 class="header">{{ list.name }}</h2>
 
     <div class="deck">
-      <Card v-for="card in cards" :key="card.id" :card="card"></Card>
+      <draggable v-model="cards" ghost-class="ghost" group="list" @change="cardMoved">
+        <Card v-for="card in cards" :key="card.id" :card="card"></Card>
+      </draggable>
 
       <div class="input-area">
         <button v-show="!editing" @click="toggleEdit" class="button bg-gray-400 mt-2 mb-2">新增卡片</button>
@@ -25,11 +27,13 @@
 <script>
 import Rails from '@rails/ujs';
 import Card from 'components/card';
+import draggable from 'vuedraggable';
 
 export default {
   name: 'List',
   components: {
-    Card
+    Card,
+    draggable
   },
   props: ["list"],
   data: function(){
@@ -63,6 +67,31 @@ export default {
           console.log(err);
         }
       })
+    },
+    cardMoved(e){
+      let evt = e.added || e.moved
+
+      if (evt) {
+        let el = evt.element
+        let card_id = el.id
+
+        let data = new FormData()
+        data.append("card[position]", evt.newIndex + 1)
+        data.append("card[list_id]", this.list.id)
+
+        Rails.ajax({
+          url: `/cards/${card_id}/move`,
+          type: 'PUT',
+          data,
+          dataType: 'json',
+          success: res => {
+            console.log(res);
+          },
+          error: err => {
+            console.log(err);
+          }
+        })
+      }
     }
   },
 }
@@ -70,6 +99,9 @@ export default {
 
 
 <style lang="scss" scoped>
+.ghost {
+  @apply border-2 border-gray-400 border-dashed bg-gray-200
+}
 .list {
   @apply px-3 py-1 bg-gray-300 mx-2 w-64 rounded;
 
