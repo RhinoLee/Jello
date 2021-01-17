@@ -103,7 +103,7 @@ export default {
   @apply border-2 border-gray-400 border-dashed bg-gray-200
 }
 .list {
-  @apply px-3 py-1 bg-gray-300 mx-2 w-64 rounded;
+  @apply flex-none h-full px-3 py-1 bg-gray-300 mx-2 w-64 rounded;
 
   .header {
     @apply font-bold
