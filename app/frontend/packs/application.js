@@ -30,11 +30,10 @@ document.addEventListener('turbolinks:load', function(e){
       },
       el,
       data: {
-        lists: JSON.parse(el.dataset.lists)
+        lists: []
       },
       methods: {
         listMoved(e){
-          console.log(e);
 
           let data = new FormData();
           data.append("list[position]", e.moved.newIndex + 1)
@@ -53,6 +52,19 @@ document.addEventListener('turbolinks:load', function(e){
           })
         }
       },
+      created() {
+        Rails.ajax({
+          url: '/lists.json',
+          type: 'GET',
+          dataType: 'json',
+          success: res => {
+            this.lists = res
+          },
+          error: err => {
+            console.log(err);
+          }
+        })
+      }
 
     })
   }
