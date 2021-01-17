@@ -15,6 +15,7 @@ import Rails from '@rails/ujs';
 import draggable from 'vuedraggable';
 import Vue from 'vue/dist/vue.esm';
 import List from 'components/list';
+import store from 'stores/list';
 
 
 
@@ -29,41 +30,24 @@ document.addEventListener('turbolinks:load', function(e){
         draggable
       },
       el,
-      data: {
-        lists: []
+      store,
+      computed: {
+        lists: {
+          get(){
+            return this.$store.getters.lists
+          },
+          set(val){
+            this.$store.commit('setLists', val)
+          }
+        }
       },
       methods: {
         listMoved(e){
-
-          let data = new FormData();
-          data.append("list[position]", e.moved.newIndex + 1)
-
-          Rails.ajax({
-            url: `/lists/${ e.moved.element.id }/move`,
-            type: 'PUT',
-            data,
-            dataType: 'json',
-            success: res => {
-              console.log(res);
-            },
-            error: err => {
-              console.log(err);
-            }
-          })
+          this.$store.dispatch('moveList', e)
         }
       },
       created() {
-        Rails.ajax({
-          url: '/lists.json',
-          type: 'GET',
-          dataType: 'json',
-          success: res => {
-            this.lists = res
-          },
-          error: err => {
-            console.log(err);
-          }
-        })
+        this.$store.dispatch('loadList')
       }
 
     })
