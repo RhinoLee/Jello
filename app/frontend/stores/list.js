@@ -14,6 +14,12 @@ export default new Vuex.Store({
   mutations: {
     setLists(state, lists){
       state.lists = lists
+    },
+    setCard(state, card) {
+      let list = state.lists.filter(list => list.id === card.list_id)[0]
+      let oldCard = list.cards.filter(item => item.id === card.id)[0]
+
+      oldCard.name = card.name
     }
   },
   actions: {
@@ -35,6 +41,23 @@ export default new Vuex.Store({
         dataType: 'json',
         success: res => {
           commit('setLists', res)
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    },
+    updateCard({ commit }, { id, name }) {
+      let data = new FormData()
+      data.append("card[name]", name)
+
+      Rails.ajax({
+        url: `/cards/${id}`,
+        type: 'PUT',
+        data,
+        dataType: 'json',
+        success: res => {
+          commit('setCard', res)
         },
         error: err => {
           console.log(err);
