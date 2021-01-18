@@ -15,6 +15,7 @@ import Rails from '@rails/ujs';
 import draggable from 'vuedraggable';
 import Vue from 'vue/dist/vue.esm';
 import List from 'components/list';
+import Newlist from 'components/newlist';
 import store from 'stores/list';
 
 
@@ -27,7 +28,8 @@ document.addEventListener('turbolinks:load', function(e){
     new Vue({
       components: {
         List,
-        draggable
+        draggable,
+        Newlist
       },
       el,
       store,

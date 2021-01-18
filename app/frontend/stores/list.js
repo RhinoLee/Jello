@@ -20,6 +20,13 @@ export default new Vuex.Store({
       let oldCard = list.cards.filter(item => item.id === card.id)[0]
 
       oldCard.name = card.name
+    },
+    addList(state, list) {
+      state.lists.push(list)
+    },
+    removeList(state, list_id){
+      let list_index = state.lists.findIndex(list => list.id === list_id)
+      state.lists.splice(list_index, 1)
     }
   },
   actions: {
@@ -58,6 +65,36 @@ export default new Vuex.Store({
         dataType: 'json',
         success: res => {
           commit('setCard', res)
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    },
+    createList({ commit }, list_name) {
+      let data = new FormData();
+      data.append("list[name]", list_name);
+
+      Rails.ajax({
+        url: '/lists',
+        type: 'POST',
+        data,
+        dataType: 'json',
+        success: res => {
+          commit('addList', res)
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    },
+    removeList({ commit }, list_id) {
+      Rails.ajax({
+        url: `/lists/${list_id}`,
+        type: 'DELETE',
+        dataType: 'json',
+        success: res => {
+          commit('removeList', list_id)
         },
         error: err => {
           console.log(err);
