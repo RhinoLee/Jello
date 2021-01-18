@@ -25,6 +25,7 @@ document.addEventListener('turbolinks:load', function(e){
   let el = document.querySelector('#board')
 
   if (el) {
+    window.$store = store;
     new Vue({
       components: {
         List,
